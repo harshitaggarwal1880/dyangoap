@@ -19,7 +19,6 @@ from django.template.defaultfilters import slugify
 from main.models import Log
 from medication.utils import parse_email
 
-
 class AccessLevel:
     """
     Access levels for user roles.
@@ -246,3 +245,4 @@ class EmailVerificationLink(Log):
             return email_link
         except Exception as e:
             return e
+        

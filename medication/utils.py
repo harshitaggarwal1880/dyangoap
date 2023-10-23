@@ -227,7 +227,7 @@ def get_manual_access_token(user):
     # Save the access token
     access_token.save()
     # Access token value
-    return access_token.token
+    return access_token
 
 
 from django.core.mail import EmailMultiAlternatives

@@ -121,6 +121,7 @@ class BaseAPIView(APIView):
                 data=data,
                 auth=auth
             )
+            print(response)            
             if response.ok:
                 json_response = response.json()
                 return {

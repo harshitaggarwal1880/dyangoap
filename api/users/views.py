@@ -42,7 +42,9 @@ class SignUpView(BaseAPIView):
             serializer = SignUpSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
+                print("save user")
                 oauth_token = self.get_oauth_token(parse_email(request.data['email']), request.data['password'])
+                print(oauth_token)
                 if 'access_token' in oauth_token:
                     user_data = serializer.data
                     user_data['access_token'] = oauth_token.get('access_token')
@@ -75,6 +77,8 @@ class SignUpView(BaseAPIView):
                 description="Cannot resolve keyword given in 'order_by' into field"
             )
         except Exception as e:
+            print(e)
+            print("exception")
             if hasattr(e.__cause__, 'pgcode') and e.__cause__.pgcode == '23505':
                 return self.send_response(
                     code=f'422',
@@ -250,7 +254,7 @@ class UserProfilePasswordView(BaseAPIView):
                     description=e
                 )
 
-
+from medication.utils import parse_email, get_manual_access_token
 class LoginView(BaseAPIView):
     """
     API View for Login Super Admin and Admin
@@ -259,17 +263,21 @@ class LoginView(BaseAPIView):
     permission_classes = ()
 
     def post(self, request, pk=None):
-        try:
+        if True:
             serializer = AuthenticateSerializer(data=request.data)
             if serializer.is_valid():
                 email = parse_email(serializer.data.get('email'))
                 password = serializer.data.get('password')
+                print(password)
                 user = authenticate(request, email=email, password=password)
+                print(user)
                 if user:
 
                     if user.is_active:
-
+                        print("fkasjdfl")
                         oauth_token = self.get_oauth_token(email, password)
+                        print("oauth_token")
+                        print(oauth_token)
                         if 'access_token' in oauth_token:
                             # user_data = {'access_token': oauth_token.get('access_token'),
                             #              'refresh_token': oauth_token.get('refresh_token')}
@@ -284,6 +292,7 @@ class LoginView(BaseAPIView):
                                                       description='You are logged in!',
                                                       )
                         else:
+                            print("error 500")
                             return self.send_response(description='Something went wrong with Oauth token generation.',
                                                       code=f'500')
                     else:
@@ -309,7 +318,8 @@ class LoginView(BaseAPIView):
                 )
 
 
-        except Exception as e:
+        else:
+            print(e)
             return self.send_response(code=f'500',
                                       description=e)
 
